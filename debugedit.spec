@@ -1,5 +1,5 @@
 Name: debugedit
-Version: 0.2
+Version: 0.3
 Release: 1%{?dist}
 Summary: Tools for debuginfo creation
 License: GPLv3+ and GPLv2+ and LGPLv2+
@@ -53,6 +53,9 @@ read and write ELF files, DWARF data and build-ids.
 
 %install
 %make_install
+# Temp symlink to make sure things don't break.
+cd %{buildroot}%{_bindir}
+ln -s find-debuginfo find-debuginfo.sh
 
 %check
 # The testsuite should be zero fail.
@@ -65,12 +68,17 @@ make check %{?_smp_mflags}
 %doc README
 %{_bindir}/debugedit
 %{_bindir}/sepdebugcrcfix
+%{_bindir}/find-debuginfo
 %{_bindir}/find-debuginfo.sh
 %{_mandir}/man1/debugedit.1*
 %{_mandir}/man1/sepdebugcrcfix.1*
-%{_mandir}/man1/find-debuginfo.sh.1*
+%{_mandir}/man1/find-debuginfo.1*
 
 %changelog
+* Thu Jun 17 2021 Mark Wielaard <mjw@fedoraproject.org> - 0.3-1
+- Update to upstream 0.3 pre-release. Removes find-debuginfo .sh suffix.
+  - This release still has a find-debuginfo.sh -> find-debuginfo symlink.
+
 * Wed May  5 2021 Mark Wielaard <mjw@fedoraproject.org> - 0.2-1
 - Update to upstream 0.2 pre-release. Adds documentation.
 
