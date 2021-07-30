@@ -14,6 +14,9 @@ BuildRequires: pkgconfig(libdw)
 
 BuildRequires: gnupg2
 
+# For the testsuite.
+BuildRequires: autoconf
+
 # The find-debuginfo.sh script has a couple of tools it needs at runtime.
 # For strip_to_debug, eu-strip
 Requires: elfutils
