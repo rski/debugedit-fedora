@@ -1,0 +1,79 @@
+From 2e5be3d9b8501c4ca3d01b990191ff79171faf17 Mon Sep 17 00:00:00 2001
+From: Mark Wielaard <mark@klomp.org>
+Date: Fri, 30 Jul 2021 18:09:46 +0200
+Subject: [PATCH] tests: Handle zero directory entry in .debug_line DWARF5
+ debugedit.at
+
+We were skipping the zero directory entry, because it was always
+the same as the directory entry at position one. But that isn't
+true anymore with gcc 11.2.1. There the zero dir entry is unique.
+Fix the debugedit.at .debug_line testcases using DWARF5 to also
+include dir entry zero.
+
+Signed-off-by: Mark Wielaard <mark@klomp.org>
+---
+ tests/debugedit.at | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/tests/debugedit.at b/tests/debugedit.at
+index 608b1d0..c73bf82 100644
+--- a/tests/debugedit.at
++++ b/tests/debugedit.at
+@@ -492,6 +492,7 @@ DEBUGEDIT_SETUP([-gdwarf-5])
+ 
+ AT_DATA([expout],
+ [foo/bar/baz
++foo/bar/baz/subdir_bar
+ foo/bar/baz/subdir_headers
+ ])
+ 
+@@ -500,8 +501,8 @@ AT_CHECK([[debugedit -b $(pwd) -d /foo/bar/baz ./subdir_bar/bar.o]])
+ AT_CHECK([[debugedit -b $(pwd) -d /foo/bar/baz ./baz.o]])
+ AT_CHECK([[
+ readelf --debug-dump=line foo.o subdir_bar/bar.o baz.o \
+-        | grep -A5 "The Directory Table" | grep "^  [123]" \
+-	| cut -f2- -d/ | grep ^foo/ | sort
++        | grep -A6 "The Directory Table" | grep "^  [0123]" \
++	| cut -f2- -d/ | grep ^foo/ | sort | uniq
+ ]],[0],[expout])
+ 
+ AT_CLEANUP
+@@ -539,14 +540,15 @@ DEBUGEDIT_SETUP([-gdwarf-5])
+ 
+ AT_DATA([expout],
+ [foo/bar/baz
++foo/bar/baz/subdir_bar
+ foo/bar/baz/subdir_headers
+ ])
+ 
+ AT_CHECK([[debugedit -b $(pwd) -d /foo/bar/baz ./foobarbaz.part.o]])
+ AT_CHECK([[
+ readelf --debug-dump=line ./foobarbaz.part.o \
+-        | grep -A5 "The Directory Table" | grep "^  [123]" \
+-	| cut -f2- -d/ | grep ^foo/ | sort
++        | grep -A6 "The Directory Table" | grep "^  [0123]" \
++	| cut -f2- -d/ | grep ^foo/ | sort | uniq
+ ]],[0],[expout])
+ 
+ AT_CLEANUP
+@@ -584,14 +586,15 @@ DEBUGEDIT_SETUP([-gdwarf-5])
+ 
+ AT_DATA([expout],
+ [foo/bar/baz
++foo/bar/baz/subdir_bar
+ foo/bar/baz/subdir_headers
+ ])
+ 
+ AT_CHECK([[debugedit -b $(pwd) -d /foo/bar/baz ./foobarbaz.exe]])
+ AT_CHECK([[
+ readelf --debug-dump=line ./foobarbaz.exe \
+-        | grep -A5 "The Directory Table" | grep "^  [123]" \
+-	| cut -f2- -d/ | grep ^foo/ | sort
++        | grep -A6 "The Directory Table" | grep "^  [0123]" \
++	| cut -f2- -d/ | grep ^foo/ | sort | uniq
+ ]],[0],[expout])
+ 
+ AT_CLEANUP
+-- 
+2.31.1
+

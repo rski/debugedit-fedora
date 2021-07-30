@@ -1,6 +1,6 @@
 Name: debugedit
 Version: 5.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Tools for debuginfo creation
 License: GPLv3+ and GPLv2+ and LGPLv2+
 URL: https://sourceware.org/debugedit/
@@ -34,6 +34,8 @@ Requires: grep
 
 %global _hardened_build 1
 
+Patch1: 0001-tests-Handle-zero-directory-entry-in-.debug_line-DWA.patch
+
 %description
 The debugedit project provides programs and scripts for creating
 debuginfo and source file distributions, collect build-ids and rewrite
@@ -45,7 +47,7 @@ read and write ELF files, DWARF data and build-ids.
 
 %prep
 %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
-%autosetup
+%autosetup -p1
 
 %build
 %configure
@@ -75,6 +77,9 @@ make check %{?_smp_mflags}
 %{_mandir}/man1/find-debuginfo.1*
 
 %changelog
+* Fri Jul 30 2021 Mark Wielaard <mjw@fedoraproject.org> - 5.0-2
+- Add testsuite fix for GCC 11.2.1
+
 * Mon Jul 26 2021 Mark Wielaard <mjw@fedoraproject.org> - 5.0-1
 - Upgrade to upstream 5.0 release.
 
