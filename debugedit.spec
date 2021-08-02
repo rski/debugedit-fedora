@@ -11,11 +11,12 @@ Source2: gpgkey-5C1D1AA44BE649DE760A.gpg
 BuildRequires: make gcc
 BuildRequires: pkgconfig(libelf)
 BuildRequires: pkgconfig(libdw)
-
+BuildRequires: help2man
 BuildRequires: gnupg2
 
 # For the testsuite.
 BuildRequires: autoconf
+BuildRequires: automake
 
 # The find-debuginfo.sh script has a couple of tools it needs at runtime.
 # For strip_to_debug, eu-strip
@@ -53,6 +54,7 @@ read and write ELF files, DWARF data and build-ids.
 %autosetup -p1
 
 %build
+autoreconf -f -v -i
 %configure
 %make_build
 
