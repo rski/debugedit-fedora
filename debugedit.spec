@@ -1,6 +1,6 @@
 Name: debugedit
 Version: 5.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Tools for debuginfo creation
 License: GPLv3+ and GPLv2+ and LGPLv2+
 URL: https://sourceware.org/debugedit/
@@ -82,6 +82,9 @@ make check %{?_smp_mflags}
 %{_mandir}/man1/find-debuginfo.1*
 
 %changelog
+* Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Fri Jul 30 2021 Mark Wielaard <mjw@fedoraproject.org> - 5.0-2
 - Add testsuite fix for GCC 11.2.1
 
