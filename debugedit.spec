@@ -1,6 +1,6 @@
 Name: debugedit
 Version: 5.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Tools for debuginfo creation
 License: GPLv3+ and GPLv2+ and LGPLv2+
 URL: https://sourceware.org/debugedit/
@@ -66,8 +66,6 @@ ln -s find-debuginfo find-debuginfo.sh
 
 %check
 # The testsuite should be zero fail.
-# It uses its own CFLAGS and LDFLAGS settings.
-sed -i 's/^\(C\|LD\)FLAGS=.*/\1FLAGS=""/' tests/atlocal
 make check %{?_smp_mflags}
 
 %files
@@ -82,6 +80,9 @@ make check %{?_smp_mflags}
 %{_mandir}/man1/find-debuginfo.1*
 
 %changelog
+* Tue May 10 2022 Romanos Skiadas <rom.skiad@gmail.com> - 5.0-4
+- Remove CFLAGS/LDFLAGS sed as they are already set to "" by debugedit
+
 * Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
